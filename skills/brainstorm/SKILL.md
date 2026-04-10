@@ -168,4 +168,19 @@ Tell the user:
 
 Then ask: **"Want me to open a new Claude session there and start the deep research now?"**
 
-If yes, use the `session-transfer:new-claude-at` skill to open a new Claude Code session at the new repo path.
+If yes, use the `session-transfer:new-claude-at` skill with:
+- **Target path**: the new repo
+- **Seed prompt**: `/brainstorm-solutions:deep-research`
+- **Self-destruct**: close the current terminal (the orchestrator's job is done)
+
+### 8. Agent Junction handoff (opportunistic)
+
+If Agent Junction is running (`curl -s http://127.0.0.1:4200/health` returns OK):
+
+1. Register with Junction as role `"orchestrator"` with context about the blocker.
+2. After the new session spawns and registers (as `"researcher"`), send it a message with:
+   - The blocker summary
+   - A note that `prompts/queue/01-initial-investigation.md` is ready to run
+   - Any additional context from the current conversation that wouldn't be in the seeded files
+
+This is opportunistic — if Junction isn't running, the file-based context (research brief + queued prompt) is sufficient. The seed prompt already tells the new session what to do.
