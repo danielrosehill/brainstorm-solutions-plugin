@@ -173,14 +173,45 @@ If yes, use the `session-transfer:new-claude-at` skill with:
 - **Seed prompt**: `/brainstorm-solutions:deep-research`
 - **Self-destruct**: close the current terminal (the orchestrator's job is done)
 
-### 8. Agent Junction handoff (opportunistic)
+### 8. Context transfer to the new session
 
-If Agent Junction is running (`curl -s http://127.0.0.1:4200/health` returns OK):
+Try Agent Junction first, fall back to file-based transfer if it's unavailable.
 
-1. Register with Junction as role `"orchestrator"` with context about the blocker.
+#### Path A: Agent Junction (if running)
+
+Check if Junction is available:
+```bash
+curl -sf http://127.0.0.1:4200/health >/dev/null 2>&1
+```
+
+If it responds:
+
+1. Register with Junction as role `"orchestrator"` with context:
+   - `repo`: current working directory
+   - `task`: "brainstorm handoff for <blocker topic>"
 2. After the new session spawns and registers (as `"researcher"`), send it a message with:
    - The blocker summary
    - A note that `prompts/queue/01-initial-investigation.md` is ready to run
-   - Any additional context from the current conversation that wouldn't be in the seeded files
+   - Any additional context from the current conversation that wouldn't be in the seeded files (e.g. conversation snippets, error logs, links discovered)
 
-This is opportunistic — if Junction isn't running, the file-based context (research brief + queued prompt) is sufficient. The seed prompt already tells the new session what to do.
+#### Path B: File-based fallback (if Junction unavailable)
+
+If Junction isn't running or the health check fails:
+
+1. Write a `HANDOVER.md` in the new research repo root with:
+   ```markdown
+   # Handover from Orchestrator
+
+   ## Blocker
+   <blocker summary>
+
+   ## Conversation Context
+   <any relevant details from this session not already in the research brief — 
+   error messages, links visited, partial solutions, conversation insights>
+
+   ## First Action
+   Run `/brainstorm-solutions:deep-research` to execute the queued prompt.
+   ```
+2. Commit and push the handover file before spawning the new session.
+
+The seeded research brief and queued prompt are always self-contained enough for the researcher to start independently. The handover (via Junction or file) adds conversation context that wouldn't otherwise survive the session boundary.

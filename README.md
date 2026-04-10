@@ -36,6 +36,17 @@ Edit `config.json` at the plugin root to customise paths:
 - `research_template_path` — local path to your research workspace template
 - `research_output_path` — where new research repos get created
 
+## Agent-to-agent handoff
+
+If [Agent Junction](https://github.com/danielrosehill/Agent-Junction) is running on localhost, the orchestrator session can send live context to the spawned researcher session via encrypted peer-to-peer messaging. This is optional — if Junction isn't available, the plugin falls back to file-based context transfer (the seeded research brief and queued prompt are self-contained).
+
+To enable Junction handoff:
+
+```bash
+npm install -g agent-junction
+agent-junction  # start the server before invoking the skill
+```
+
 ## Installation
 
 ```bash
