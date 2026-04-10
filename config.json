@@ -1,0 +1,9 @@
+{
+  "research_index_repo": {
+    "local_path": "~/repos/github/my-repos/Open-Research-Workspaces-Index",
+    "github_url": "https://github.com/danielrosehill/Open-Research-Workspaces-Index",
+    "enabled": true
+  },
+  "research_template_path": "~/repos/github/my-repos/Claude-Research-Workspace-General-Template",
+  "research_output_path": "~/repos/github/my-repos"
+}
