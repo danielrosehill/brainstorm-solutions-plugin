@@ -6,7 +6,7 @@ When you hit a wall during development, spin up a dedicated research workspace t
 
 1. You're stuck on something — a technical blocker, a design decision, an integration problem.
 2. Invoke `/brainstorm-solutions:brainstorm` and describe the blocker.
-3. The plugin creates a research workspace repo (from the Claude Research Workspace template), seeded with your blocker context, what you've already tried, and potential directions.
+3. The plugin creates a research workspace repo (from the `deep-research` scaffold of the research-space plugin), seeded with your blocker context, what you've already tried, and potential directions.
 4. Jump into the workspace and run `/brainstorm-solutions:deep-research` to kick off structured investigation.
 
 ## Skills

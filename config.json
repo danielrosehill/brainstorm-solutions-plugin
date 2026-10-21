@@ -1,9 +1,9 @@
 {
   "research_index_repo": {
-    "local_path": "~/repos/github/my-repos/Open-Research-Workspaces-Index",
     "github_url": "https://github.com/danielrosehill/Open-Research-Workspaces-Index",
-    "enabled": true
+    "enabled": true,
+    "repo": "danielrosehill/Open-Research-Workspaces-Index"
   },
   "research_template_path": "~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research",
-  "research_output_path": "~/repos/github/my-repos"
+  "research_output_path": "~/repos/github/<topic-group>"
 }

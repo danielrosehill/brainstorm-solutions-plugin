@@ -14,18 +14,18 @@ Check for a `config.json` at the plugin root (same directory as `.claude-plugin/
 ```json
 {
   "research_index_repo": {
-    "local_path": "~/repos/github/my-repos/Open-Research-Workspaces-Index",
-    "github_url": "https://github.com/user/Open-Research-Workspaces-Index",
+    "repo": "danielrosehill/Open-Research-Workspaces-Index",
+    "github_url": "https://github.com/danielrosehill/Open-Research-Workspaces-Index",
     "enabled": true
   },
   "research_template_path": "~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research",
-  "research_output_path": "~/repos/github/my-repos"
+  "research_output_path": "~/repos/github/<topic-group>"
 }
 ```
 
 - `research_index_repo` — if `enabled` is true, the new workspace will be registered in this index repo after creation.
 - `research_template_path` — path to the research workspace template to copy from. Falls back to the `deep-research` scaffold of the `research-space` plugin (`Claude-Research-Space-Plugin`): `~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research`. (The old standalone `Claude-Research-Workspace-General-Template` repo no longer exists.)
-- `research_output_path` — where to create the new repo. Falls back to `~/repos/github/my-repos`.
+- `research_output_path` — where to create the new repo: the topic group under `~/repos/github/` that fits the blocker's subject (groups and the "maximum specificity wins" rule: `~/repos/github/README.md`). `my-repos/` is no longer used for new repos (reorganised 2026-07-25). If no group fits, ask.
 
 If `config.json` is missing or fields are empty, use the defaults and skip the index step.
 
@@ -43,9 +43,9 @@ If `config.json` is missing or fields are empty, use the defaults and skip the i
 
 ```bash
 cp -r ~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research \
-      ~/repos/github/my-repos/<Repo-Name>
-rm -rf ~/repos/github/my-repos/<Repo-Name>/.git
-mkdir -p ~/repos/github/my-repos/<Repo-Name>/context/from-human
+      ~/repos/github/<topic-group>/<Repo-Name>
+rm -rf ~/repos/github/<topic-group>/<Repo-Name>/.git
+mkdir -p ~/repos/github/<topic-group>/<Repo-Name>/context/from-human
 ```
 
 Repo name MUST be Title-Case-With-Hyphens.
@@ -126,7 +126,7 @@ Lightly update the workspace CLAUDE.md to reference the specific blocker topic i
 ### 5. Init and push
 
 ```bash
-cd ~/repos/github/my-repos/<Repo-Name>
+cd ~/repos/github/<topic-group>/<Repo-Name>
 git init
 git add -A
 git commit -m "Initial scaffold: brainstorm solutions for <blocker topic>"
@@ -137,9 +137,9 @@ gh repo create danielrosehill/<Repo-Name> --<public|private> --source=. --push
 
 If `config.json` has `research_index_repo.enabled` set to `true`:
 
-1. Navigate to the index repo's local path.
-2. `git pull` to get latest.
-3. Read the `README.md` to understand the entry format.
+1. Read the index's `README.md` with `mcp__gateway__github__get_file_contents` (`owner`/`repo` from `research_index_repo.repo`, `path: README.md`); no clone needed. Keep the returned `sha`.
+2. (If the gateway's `github` tools are unavailable, use a temporary clone: `gh repo clone <repo> "$(mktemp -d)/idx"`.)
+3. Read the entry format from that README.
 4. Add a new entry under the `## Research Workspaces` section, matching the existing format:
 
    ```markdown
@@ -151,19 +151,14 @@ If `config.json` has `research_index_repo.enabled` set to `true`:
    ```
 
 5. Insert alphabetically among existing entries.
-6. Commit and push:
-   ```bash
-   git add README.md
-   git commit -m "Add <Repo-Name> to research index"
-   git push
-   ```
+6. Write it back with `mcp__gateway__github__create_or_update_file` (same `path`, the `sha` from step 1, message `Add <Repo-Name> to research index`); or commit and push from the temporary clone.
 
 If not configured, skip this step silently.
 
 ### 7. Report and offer next step
 
 Tell the user:
-- Local path: `~/repos/github/my-repos/<Repo-Name>`
+- Local path: `~/repos/github/<topic-group>/<Repo-Name>`
 - GitHub URL
 - The workspace is seeded and ready
 
