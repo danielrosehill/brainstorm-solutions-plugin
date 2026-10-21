@@ -18,13 +18,13 @@ Check for a `config.json` at the plugin root (same directory as `.claude-plugin/
     "github_url": "https://github.com/user/Open-Research-Workspaces-Index",
     "enabled": true
   },
-  "research_template_path": "~/repos/github/my-repos/Claude-Research-Workspace-General-Template",
+  "research_template_path": "~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research",
   "research_output_path": "~/repos/github/my-repos"
 }
 ```
 
 - `research_index_repo` — if `enabled` is true, the new workspace will be registered in this index repo after creation.
-- `research_template_path` — path to the research workspace template to copy from. Falls back to `~/repos/github/my-repos/Claude-Research-Workspace-General-Template`.
+- `research_template_path` — path to the research workspace template to copy from. Falls back to the `deep-research` scaffold of the `research-space` plugin (`Claude-Research-Space-Plugin`): `~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research`. (The old standalone `Claude-Research-Workspace-General-Template` repo no longer exists.)
 - `research_output_path` — where to create the new repo. Falls back to `~/repos/github/my-repos`.
 
 If `config.json` is missing or fields are empty, use the defaults and skip the index step.
@@ -42,9 +42,10 @@ If `config.json` is missing or fields are empty, use the defaults and skip the i
 ### 1. Scaffold from research template
 
 ```bash
-cp -r ~/repos/github/my-repos/Claude-Research-Workspace-General-Template \
+cp -r ~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research \
       ~/repos/github/my-repos/<Repo-Name>
 rm -rf ~/repos/github/my-repos/<Repo-Name>/.git
+mkdir -p ~/repos/github/my-repos/<Repo-Name>/context/from-human
 ```
 
 Repo name MUST be Title-Case-With-Hyphens.

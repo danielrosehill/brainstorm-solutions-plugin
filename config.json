@@ -4,6 +4,6 @@
     "github_url": "https://github.com/danielrosehill/Open-Research-Workspaces-Index",
     "enabled": true
   },
-  "research_template_path": "~/repos/github/my-repos/Claude-Research-Workspace-General-Template",
+  "research_template_path": "~/repos/github/ai-agents-and-prompts/ai-claude-plugins/Claude-Research-Space-Plugin/template/deep-research",
   "research_output_path": "~/repos/github/my-repos"
 }
